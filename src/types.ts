@@ -48,9 +48,7 @@ type OpResponseTypes<OP> = OP extends {
             content: ContentTypes<infer C>
           } // openapi 3
         ? C
-        : S extends 'default'
-        ? R[S]
-        : unknown
+        : R[S]
     }
   : never
 
