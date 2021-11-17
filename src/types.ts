@@ -13,6 +13,17 @@ export type OpenapiPaths<Paths> = {
   }
 }
 
+type ContentTypes<C> =
+  | {
+      'application/json': C
+    }
+  | {
+      'text/csv': C
+    }
+  | {
+      'text/plain': C
+    }
+
 export type OpArgType<OP> = OP extends {
   parameters?: {
     path?: infer P
@@ -21,9 +32,7 @@ export type OpArgType<OP> = OP extends {
   }
   // openapi 3
   requestBody?: {
-    content: {
-      'application/json': infer RB
-    }
+    content: ContentTypes<infer RB>
   }
 }
   ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
@@ -35,7 +44,9 @@ type OpResponseTypes<OP> = OP extends {
   ? {
       [S in keyof R]: R[S] extends { schema?: infer S } // openapi 2
         ? S
-        : R[S] extends { content: { 'application/json': infer C } } // openapi 3
+        : R[S] extends {
+            content: ContentTypes<infer C>
+          } // openapi 3
         ? C
         : S extends 'default'
         ? R[S]
