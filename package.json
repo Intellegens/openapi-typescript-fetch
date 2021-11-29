@@ -63,7 +63,6 @@
     "build": "npm run clean && tsc --project tsconfig.json && tsc --project tsconfig.cjs.json",
     "lint": "eslint .",
     "prepare": "npm run build",
-    "preinstall": "npm run build",
     "test": "npm run build && jest",
     "test:coverage": "npm run build && jest --no-cache --coverage && codecov",
     "test:coverage:local": "npm run build && jest --no-cache --collectCoverage",
