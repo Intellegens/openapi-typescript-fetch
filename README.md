@@ -125,6 +125,30 @@ fetcher.configure({
 fetcher.use(logger)
 ```
 
+### Server Side Usage
+
+This library can be used server side with [node-fetch](https://www.npmjs.com/package/node-fetch)
+
+Node CommonJS setup
+```ts
+// install node-fetch v2
+npm install node-fetch@2
+npm install @types/node-fetch@2
+
+// fetch-polyfill.ts
+import fetch, { Headers, Request, Response } from 'node-fetch'
+
+if (!globalThis.fetch) {
+    globalThis.fetch = fetch as any
+    globalThis.Headers = Headers as any
+    globalThis.Request = Request as any
+    globalThis.Response = Response as any
+}
+
+// index.ts
+import './fetch-polyfill'
+```
+
 ### Utility Types
 
 - `OpArgType` - Infer argument type of an operation
@@ -132,21 +156,27 @@ fetcher.use(logger)
 - `OpErrorType` - Infer error type of an operation
 - `FetchArgType` - Argument type of a typed fetch operation
 - `FetchReturnType` - Return type of a typed fetch operation
-- `FetchErrorType` - Return error type of a typed fetch operation
+- `FetchErrorType` - Error type of a typed fetch operation
+- `TypedFetch` - Fetch operation type
 
 ```ts
 import { paths, operations } from './petstore'
 
 type Arg = OpArgType<operations['findPetsByStatus']>
 type Ret = OpReturnType<operations['findPetsByStatus']>
+type Err = OpErrorType<operations['findPetsByStatus']>
 
 type Arg = OpArgType<paths['/pet/findByStatus']['get']>
 type Ret = OpReturnType<paths['/pet/findByStatus']['get']>
+type Err = OpErrorType<paths['/pet/findByStatus']['get']>
+
+type FindPetsByStatus = TypedFetch<operations['findPetsByStatus']>
 
 const findPetsByStatus = fetcher.path('/pet/findByStatus').method('get').create()
 
 type Arg = FetchArgType<typeof findPetsByStatus>
 type Ret = FetchReturnType<typeof findPetsByStatus>
+type Err = FetchErrorType<typeof findPetsByStatus>
 ```
 
 Happy fetching! 👍
