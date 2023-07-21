@@ -89,8 +89,13 @@ function getFetchParams(request) {
 function getResponseData(response) {
     return __awaiter(this, void 0, void 0, function* () {
         const contentType = response.headers.get('content-type');
+        console.log('The local fetcher is runin');
         if (contentType && contentType.indexOf('application/json') !== -1) {
             return yield response.json();
+        }
+        if (contentType && contentType.indexOf('application/pdf') !== -1) {
+            console.log('We are inside the pdf if');
+            return yield response.arrayBuffer();
         }
         const text = yield response.text();
         try {
