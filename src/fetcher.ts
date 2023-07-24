@@ -131,6 +131,9 @@ async function getResponseData(response: Response) {
   if (contentType && contentType.indexOf('application/json') !== -1) {
     return await response.json()
   }
+  if (contentType && contentType.indexOf('application/pdf') !== -1) {
+    return await response.arrayBuffer()
+  }
   const text = await response.text()
   try {
     return JSON.parse(text)

@@ -1,17 +1,17 @@
-export declare type Method = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
-export declare type OpenapiPaths<Paths> = {
+export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
+export type OpenapiPaths<Paths> = {
     [P in keyof Paths]: {
         [M in Method]?: unknown;
     };
 };
-declare type ContentTypes<C> = {
+type ContentTypes<C> = {
     'application/json': C;
 } | {
     'text/csv': C;
 } | {
     'text/plain': C;
 };
-export declare type OpArgType<OP> = OP extends {
+export type OpArgType<OP> = OP extends {
     parameters?: {
         path?: infer P;
         query?: infer Q;
@@ -21,7 +21,7 @@ export declare type OpArgType<OP> = OP extends {
         content: ContentTypes<infer RB>;
     };
 } ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB : Record<string, never>;
-declare type OpResponseTypes<OP> = OP extends {
+type OpResponseTypes<OP> = OP extends {
     responses: infer R;
 } ? {
     [S in keyof R]: R[S] extends {
@@ -30,50 +30,50 @@ declare type OpResponseTypes<OP> = OP extends {
         content: ContentTypes<infer C>;
     } ? C : R[S];
 } : never;
-declare type _OpReturnType<T> = 200 extends keyof T ? T[200] : 201 extends keyof T ? T[201] : 204 extends keyof T ? T[204] : 'default' extends keyof T ? T['default'] : unknown;
-export declare type OpReturnType<OP> = _OpReturnType<OpResponseTypes<OP>>;
-declare type _OpDefaultReturnType<T> = 'default' extends keyof T ? T['default'] : unknown;
-export declare type OpDefaultReturnType<OP> = _OpDefaultReturnType<OpResponseTypes<OP>>;
+type _OpReturnType<T> = 200 extends keyof T ? T[200] : 201 extends keyof T ? T[201] : 204 extends keyof T ? T[204] : 'default' extends keyof T ? T['default'] : unknown;
+export type OpReturnType<OP> = _OpReturnType<OpResponseTypes<OP>>;
+type _OpDefaultReturnType<T> = 'default' extends keyof T ? T['default'] : unknown;
+export type OpDefaultReturnType<OP> = _OpDefaultReturnType<OpResponseTypes<OP>>;
 declare const never: unique symbol;
-declare type _OpErrorType<T> = {
+type _OpErrorType<T> = {
     [S in Exclude<keyof T, 200 | 201 | 204>]: {
         status: S extends 'default' ? typeof never : S;
         data: T[S];
     };
 }[Exclude<keyof T, 200 | 201 | 204>];
-declare type Coalesce<T, D> = [T] extends [never] ? D : T;
-export declare type OpErrorType<OP> = Coalesce<_OpErrorType<OpResponseTypes<OP>>, {
+type Coalesce<T, D> = [T] extends [never] ? D : T;
+export type OpErrorType<OP> = Coalesce<_OpErrorType<OpResponseTypes<OP>>, {
     status: number;
     data: any;
 }>;
-export declare type CustomRequestInit = Omit<RequestInit, 'headers'> & {
+export type CustomRequestInit = Omit<RequestInit, 'headers'> & {
     readonly headers: Headers;
 };
-export declare type Fetch = (url: string, init: CustomRequestInit) => Promise<ApiResponse>;
-export declare type _TypedFetch<OP> = (arg: OpArgType<OP>, init?: RequestInit) => Promise<ApiResponse<OpReturnType<OP>>>;
-export declare type TypedFetch<OP> = _TypedFetch<OP> & {
+export type Fetch = (url: string, init: CustomRequestInit) => Promise<ApiResponse>;
+export type _TypedFetch<OP> = (arg: OpArgType<OP>, init?: RequestInit) => Promise<ApiResponse<OpReturnType<OP>>>;
+export type TypedFetch<OP> = _TypedFetch<OP> & {
     Error: new (error: ApiError) => ApiError & {
         getActualType: () => OpErrorType<OP>;
     };
 };
-export declare type FetchArgType<F> = F extends TypedFetch<infer OP> ? OpArgType<OP> : never;
-export declare type FetchReturnType<F> = F extends TypedFetch<infer OP> ? OpReturnType<OP> : never;
-export declare type FetchErrorType<F> = F extends TypedFetch<infer OP> ? OpErrorType<OP> : never;
-declare type _CreateFetch<OP, Q = never> = [Q] extends [never] ? () => TypedFetch<OP> : (query: Q) => TypedFetch<OP>;
-export declare type CreateFetch<M, OP> = M extends 'post' | 'put' | 'patch' | 'delete' ? OP extends {
+export type FetchArgType<F> = F extends TypedFetch<infer OP> ? OpArgType<OP> : never;
+export type FetchReturnType<F> = F extends TypedFetch<infer OP> ? OpReturnType<OP> : never;
+export type FetchErrorType<F> = F extends TypedFetch<infer OP> ? OpErrorType<OP> : never;
+type _CreateFetch<OP, Q = never> = [Q] extends [never] ? () => TypedFetch<OP> : (query: Q) => TypedFetch<OP>;
+export type CreateFetch<M, OP> = M extends 'post' | 'put' | 'patch' | 'delete' ? OP extends {
     parameters: {
         query: infer Q;
     };
 } ? _CreateFetch<OP, {
     [K in keyof Q]: true | 1;
 }> : _CreateFetch<OP> : _CreateFetch<OP>;
-export declare type Middleware = (url: string, init: CustomRequestInit, next: Fetch) => Promise<ApiResponse>;
-export declare type FetchConfig = {
+export type Middleware = (url: string, init: CustomRequestInit, next: Fetch) => Promise<ApiResponse>;
+export type FetchConfig = {
     baseUrl?: string;
     init?: RequestInit;
     use?: Middleware[];
 };
-export declare type Request = {
+export type Request = {
     baseUrl: string;
     method: Method;
     path: string;
@@ -82,7 +82,7 @@ export declare type Request = {
     init?: RequestInit;
     fetch: Fetch;
 };
-export declare type ApiResponse<R = any> = {
+export type ApiResponse<R = any> = {
     readonly headers: Headers;
     readonly url: string;
     readonly ok: boolean;
