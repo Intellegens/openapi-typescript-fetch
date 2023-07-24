@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,7 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ApiError, } from './types';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Fetcher = void 0;
+const types_1 = require("./types");
 const sendBody = (method) => method === 'post' ||
     method === 'put' ||
     method === 'patch' ||
@@ -119,7 +122,7 @@ function fetchJson(url, init) {
         if (result.ok) {
             return result;
         }
-        throw new ApiError(result);
+        throw new types_1.ApiError(result);
     });
 }
 function wrapMiddlewares(middlewares, fetch) {
@@ -146,13 +149,13 @@ function createFetch(fetch) {
             return yield fetch(payload, init);
         }
         catch (err) {
-            if (err instanceof ApiError) {
+            if (err instanceof types_1.ApiError) {
                 throw new fun.Error(err);
             }
             throw err;
         }
     });
-    fun.Error = class extends ApiError {
+    fun.Error = class extends types_1.ApiError {
         constructor(error) {
             super(error);
             Object.setPrototypeOf(this, new.target.prototype);
@@ -194,7 +197,7 @@ function fetcher() {
         }),
     };
 }
-export const Fetcher = {
+exports.Fetcher = {
     for: () => fetcher(),
 };
 //# sourceMappingURL=fetcher.js.map
