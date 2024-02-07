@@ -145,9 +145,10 @@ async function getResponseData(response: Response) {
 async function fetchJson(url: string, init: RequestInit): Promise<ApiResponse> {
   const response = await fetch(url, init)
 
-  const data = await getResponseData(response)
+  const data = await getResponseData(response.clone())
 
   const result = {
+    blob: await response.blob(),
     headers: response.headers,
     url: response.url,
     ok: response.ok,

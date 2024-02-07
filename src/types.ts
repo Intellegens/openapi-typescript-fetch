@@ -153,6 +153,7 @@ export type Request = {
 }
 
 export type ApiResponse<R = any> = {
+  readonly blob: Blob
   readonly headers: Headers
   readonly url: string
   readonly ok: boolean
@@ -162,6 +163,7 @@ export type ApiResponse<R = any> = {
 }
 
 export class ApiError extends Error {
+  readonly blob: Blob
   readonly headers: Headers
   readonly url: string
   readonly status: number
@@ -172,6 +174,7 @@ export class ApiError extends Error {
     super(response.statusText)
     Object.setPrototypeOf(this, new.target.prototype)
 
+    this.blob = response.blob
     this.headers = response.headers
     this.url = response.url
     this.status = response.status
